@@ -39,12 +39,15 @@ exports.logout = exports.signin = exports.signup = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const authS = __importStar(require("./../services/auth.services"));
 const customError_1 = __importDefault(require("../helpers/customError"));
+const genarateToken_1 = __importDefault(require("../utils/genarateToken"));
+const accessToken_1 = __importDefault(require("./../utils/accessToken"));
+const errorHadler_1 = __importDefault(require("../middlewares/errorHadler"));
 exports.signup = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const values = req.body;
         const response = yield authS.signup(values);
-        genarateToken(res, response._id);
-        const accessToken = Token(response._id);
+        (0, genarateToken_1.default)(res, response._id);
+        const accessToken = (0, accessToken_1.default)(response._id);
         res
             .status(201)
             .json({
@@ -57,8 +60,8 @@ exports.signup = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
     catch (error) {
         console.log(error);
         if (error instanceof customError_1.default)
-            return handleError(res, error.statusCode, error.message, error.code);
-        return handleError(res, 500, "An unexpected error occured. Please try again later.");
+            return (0, errorHadler_1.default)(res, error.statusCode, error.message, error.code);
+        return (0, errorHadler_1.default)(res, 500, "An unexpected error occured. Please try again later.");
     }
 }));
 exports.signin = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -66,8 +69,8 @@ exports.signin = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
         const { credential, password } = req.body;
         const response = yield authS.signin(credential, password);
         console.log("response", response);
-        genarateToken(res, response._id);
-        const accessToken = Token(response._id);
+        (0, genarateToken_1.default)(res, response._id);
+        const accessToken = (0, accessToken_1.default)(response._id);
         console.log(accessToken, "asdf");
         res
             .status(200)
@@ -81,8 +84,8 @@ exports.signin = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
     catch (error) {
         console.log(error);
         if (error instanceof customError_1.default)
-            return handleError(res, error.statusCode, error.message, error.code);
-        return handleError(res, 500, "An unexpected errro occured. Please try again later.");
+            return (0, errorHadler_1.default)(res, error.statusCode, error.message, error.code);
+        return (0, errorHadler_1.default)(res, 500, "An unexpected errro occured. Please try again later.");
     }
 }));
 exports.logout = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

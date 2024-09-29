@@ -1,7 +1,8 @@
 import JWT from 'jsonwebtoken'
+import {Response} from 'express'
 
-const genarateToken = (res, uid) => {
-    const token = JWT.sign({ uid }, process.env.REFRESH_SECRET, { expiresIn: '1D' });
+const genarateToken = (res: Response, uid: string) => {
+    const token = JWT.sign({ uid }, process.env.REFRESH_SECRET as string, { expiresIn: '1D' });
     res.cookie('refreshToken', token, {
         httpOnly: true,
         secure: true,

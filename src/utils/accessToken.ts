@@ -1,3 +1,3 @@
 import JWT from 'jsonwebtoken'
 
-export default (uid) => JWT.sign({ uid }, process.env.ACCESS_SECRET);
+export default (uid:string) => JWT.sign({ uid }, process.env.ACCESS_SECRET as string);

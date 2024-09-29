@@ -1,13 +1,17 @@
 import asyncHadler from "express-async-handler";
 import * as authS from "./../services/auth.services";
 import CustomError from '../helpers/customError'
+import genarateToken from "../utils/genarateToken";
+import Token from './../utils/accessToken'
+import handleError from "../middlewares/errorHadler";
+import { Response, Request } from 'express'
 
-export const signup = asyncHadler(async (req, res) => {
+export const signup = asyncHadler(async (req: Request, res: Response) : Promise<void> => {
   try {
     const values = req.body;
     const response = await authS.signup(values);
 
-    genarateToken(res, response._id);
+    genarateToken(res, response._id  );
     const accessToken = Token(response._id);
 
     res
