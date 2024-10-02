@@ -105,4 +105,3 @@ exports.logout = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
     });
     res.status(200).json({ message: "User logged out", success: true });
 }));
-//# sourceMappingURL=auth.controller.js.map

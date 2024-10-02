@@ -12,4 +12,3 @@ const userSchema = new mongoose_1.default.Schema({
 });
 const UserModel = mongoose_1.default.model('User', userSchema);
 exports.default = UserModel;
-//# sourceMappingURL=userModel.js.map

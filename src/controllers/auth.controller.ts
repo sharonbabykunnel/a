@@ -5,12 +5,16 @@ import genarateToken from "../utils/genarateToken";
 import Token from './../utils/accessToken'
 import handleError from "../middlewares/errorHadler";
 import { Response, Request } from 'express'
+import { User, UserDocument } from "../types";
 
-export const signup = asyncHadler(async (req: Request, res: Response) : Promise<void> => {
+export const signup = asyncHadler(async (req: Request, res: Response)  => {
   try {
-    const values = req.body;
-    const response = await authS.signup(values);
+    const values : UserDocument = req.body;
+    const response : User = await authS.signup(values);
 
+    if (!response._id){
+      throw new CustomError('Internal server error',500, 'INTERNAL_ERROR');
+    }
     genarateToken(res, response._id  );
     const accessToken = Token(response._id);
 
@@ -25,8 +29,8 @@ export const signup = asyncHadler(async (req: Request, res: Response) : Promise<
   } catch (error) {
     console.log(error);
     if (error instanceof CustomError)
-      return handleError(res, error.statusCode, error.message, error.code);
-    return handleError(
+       handleError(res, error.statusCode, error.message, error.code);
+    else handleError(
       res,
       500,
       "An unexpected error occured. Please try again later."
@@ -34,11 +38,14 @@ export const signup = asyncHadler(async (req: Request, res: Response) : Promise<
   }
 });
 
-export const signin = asyncHadler(async (req, res) => {
+export const signin = asyncHadler(async (req: Request, res: Response) => {
   try {
     const { credential, password } = req.body;
     const response = await authS.signin(credential, password);
     console.log("response", response);
+    if (!response._id){
+      throw new CustomError('Internal server error',500, 'INTERNAL_ERROR');
+    }
     genarateToken(res, response._id);
     const accessToken = Token(response._id);
     console.log(accessToken, "asdf");
@@ -54,8 +61,8 @@ export const signin = asyncHadler(async (req, res) => {
     console.log(error);
 
     if (error instanceof CustomError)
-      return handleError(res, error.statusCode, error.message, error.code);
-    return handleError(
+       handleError(res, error.statusCode, error.message, error.code);
+    else handleError(
       res,
       500,
       "An unexpected errro occured. Please try again later."
@@ -63,7 +70,7 @@ export const signin = asyncHadler(async (req, res) => {
   }
 });
 
-export const logout = asyncHadler(async (req, res) => {
+export const logout = asyncHadler(async (req: Request, res: Response) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
