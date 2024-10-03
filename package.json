@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "dist/index.js",
+    "build": "cd ToDo_backend && npm install && npm run build",
+    "start": "cd ToDo_backend && npm start",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "author": "",
