@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "concurrently \"npx tsc\" \"nodemon -q dist/index.js\"",
-    "start": "nodemon dist/index.js",
+    "build": "npx tsc",
+    "start": "dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "author": "",
