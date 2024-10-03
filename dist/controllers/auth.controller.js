@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.signin = exports.signup = void 0;
+exports.changePassword = exports.logout = exports.signin = exports.signup = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const authS = __importStar(require("./../services/auth.services"));
 const customError_1 = __importDefault(require("../helpers/customError"));
@@ -45,6 +45,7 @@ const errorHadler_1 = __importDefault(require("../middlewares/errorHadler"));
 exports.signup = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const values = req.body;
+        console.log(values);
         const response = yield authS.signup(values);
         if (!response._id) {
             throw new customError_1.default('Internal server error', 500, 'INTERNAL_ERROR');
@@ -71,6 +72,7 @@ exports.signup = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
 exports.signin = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { credential, password } = req.body;
+        console.log(req.body);
         const response = yield authS.signin(credential, password);
         console.log("response", response);
         if (!response._id) {
@@ -104,5 +106,29 @@ exports.logout = (0, express_async_handler_1.default)((req, res) => __awaiter(vo
         sameSite: "strict",
     });
     res.status(200).json({ message: "User logged out", success: true });
+}));
+exports.changePassword = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        console.log(req.body);
+        const response = yield authS.changePassword(email, password);
+        console.log("response", response);
+        if (!response._id) {
+            throw new customError_1.default('Internal server error', 500, 'INTERNAL_ERROR');
+        }
+        res
+            .status(200)
+            .json({
+            success: true,
+            message: "Password Changed",
+        });
+    }
+    catch (error) {
+        console.log(error);
+        if (error instanceof customError_1.default)
+            (0, errorHadler_1.default)(res, error.statusCode, error.message, error.code);
+        else
+            (0, errorHadler_1.default)(res, 500, "An unexpected errro occured. Please try again later.");
+    }
 }));
 //# sourceMappingURL=auth.controller.js.map

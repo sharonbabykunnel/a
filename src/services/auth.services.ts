@@ -18,6 +18,17 @@ export async function signin(credential: string, password: string): Promise<User
     return user;
 }
 
+export async function changePassword(email: string, password: string): Promise<User> {
+    if (!email || !password) throw new CustomError('Credential and Password are required', 400, 'VALIDATION_ERROR');
+    console.log(email,'email')
+    const user: User | null = await authR.findByEmail(email);
+    console.log(user,'iuser')
+    if (!user) throw new CustomError('User not found', 404, 'USER_NOT_FOUND');
+    const change = await authR.changePassword(user._id,password)
+    if (!change) throw new CustomError('User not found', 404, 'USER_NOT_FOUND');
+    return change;
+}
+
 export async function signup(values: UserDocument): Promise<User> {
     if (!values.email || !values.password || !values.name || !values.number) 
         throw new CustomError("Email, Number, Name, and Password are required", 400, 'VALIDATION_ERROR');

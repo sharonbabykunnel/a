@@ -13,28 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const userSchema = new mongoose_1.default.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    number: { type: Number, required: true, unique: true },
+const env_1 = require("./env");
+const connectWithRetry = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield mongoose_1.default.connect(env_1.DB_URL);
+        console.log('Connected to mongodb...');
+    }
+    catch (error) {
+        console.log(error);
+        setTimeout(connectWithRetry, 5000);
+    }
 });
-userSchema.pre('save', function (next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            if (!this.isModified('password')) {
-                return next();
-            }
-            const salt = yield bcrypt_1.default.genSalt(10);
-            this.password = yield bcrypt_1.default.hash(this.password, salt);
-            next();
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-});
-const UserModel = mongoose_1.default.model('User', userSchema);
-exports.default = UserModel;
-//# sourceMappingURL=userModel.js.map
+connectWithRetry();
+exports.default = mongoose_1.default;
+//# sourceMappingURL=db.js.map

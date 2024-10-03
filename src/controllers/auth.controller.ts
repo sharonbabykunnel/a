@@ -10,6 +10,7 @@ import { User, UserDocument } from "../types";
 export const signup = asyncHadler(async (req: Request, res: Response)  => {
   try {
     const values : UserDocument = req.body;
+    console.log(values)
     const response : User = await authS.signup(values);
 
     if (!response._id){
@@ -41,6 +42,7 @@ export const signup = asyncHadler(async (req: Request, res: Response)  => {
 export const signin = asyncHadler(async (req: Request, res: Response) => {
   try {
     const { credential, password } = req.body;
+    console.log(req.body)
     const response = await authS.signin(credential, password);
     console.log("response", response);
     if (!response._id){
@@ -78,4 +80,32 @@ export const logout = asyncHadler(async (req: Request, res: Response) => {
     sameSite: "strict",
   });
   res.status(200).json({ message: "User logged out", success: true });
+});
+
+export const changePassword = asyncHadler(async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    console.log(req.body)
+    const response = await authS.changePassword(email, password);
+    console.log("response", response);
+    if (!response._id){
+      throw new CustomError('Internal server error',500, 'INTERNAL_ERROR');
+    }
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Password Changed",
+      });
+  } catch (error) {
+    console.log(error);
+
+    if (error instanceof CustomError)
+       handleError(res, error.statusCode, error.message, error.code);
+    else handleError(
+      res,
+      500,
+      "An unexpected errro occured. Please try again later."
+    );
+  }
 });

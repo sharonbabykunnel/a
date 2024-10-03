@@ -36,6 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signin = signin;
+exports.changePassword = changePassword;
 exports.signup = signup;
 const customError_1 = __importDefault(require("../helpers/customError"));
 const authR = __importStar(require("./../repository/auth.repository"));
@@ -58,6 +59,21 @@ function signin(credential, password) {
         if (!verify)
             throw new customError_1.default('Incorrect password', 401, 'INCORRECT_PASSWORD');
         return user;
+    });
+}
+function changePassword(email, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!email || !password)
+            throw new customError_1.default('Credential and Password are required', 400, 'VALIDATION_ERROR');
+        console.log(email, 'email');
+        const user = yield authR.findByEmail(email);
+        console.log(user, 'iuser');
+        if (!user)
+            throw new customError_1.default('User not found', 404, 'USER_NOT_FOUND');
+        const change = yield authR.changePassword(user._id, password);
+        if (!change)
+            throw new customError_1.default('User not found', 404, 'USER_NOT_FOUND');
+        return change;
     });
 }
 function signup(values) {

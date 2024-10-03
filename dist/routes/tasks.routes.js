@@ -27,11 +27,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const auth = __importStar(require("./../controllers/auth.controller"));
+const taskRouter = __importStar(require("../controllers/task.controller"));
 const router = express_1.default.Router();
-router.post("/signup", auth.signup);
-router.post("/signin", auth.signin);
-router.post("/signout", auth.logout);
-router.post("/changePassword", auth.changePassword);
+router.get('/getTasks/:id', taskRouter.getTasks);
+router.get('/getCompletedTasks/:id', taskRouter.getCompletedTasks);
+router.post('/postTask', taskRouter.postTask);
+router.put('/editTask', taskRouter.editTask);
+router.delete('/deleteTask/:id', taskRouter.deleteTask);
+router.delete('/deleteCompletedTask/:id', taskRouter.deleteTask);
+router.patch('/updateTask', taskRouter.updateTask);
+router.get('/stats/:userId', taskRouter.getTaskStats);
 exports.default = router;
-//# sourceMappingURL=auth.routes.js.map
+//# sourceMappingURL=tasks.routes.js.map
