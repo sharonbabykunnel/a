@@ -12,9 +12,11 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const tasks_routes_1 = __importDefault(require("./routes/tasks.routes"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
+const dirname = path_1.default.resolve();
 const io = new socket_io_1.Server(server, {
     pingTimeout: 6000,
     cors: {
@@ -42,6 +44,10 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use('/', tasks_routes_1.default);
 app.use('/auth', auth_routes_1.default);
+app.use(express_1.default.static(path_1.default.join(dirname, './../ToDo_List/', 'dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.resolve(dirname, './../ToDo_List/', 'dist', 'index.html'));
+});
 server.listen(PORT, () => {
     console.log('Server is running...');
 });
