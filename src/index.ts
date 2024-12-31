@@ -44,6 +44,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(dirname,'./../ToDo_List/','dist','index.html'))
 })
 server.listen(PORT,()=>{
-    console.log('Server is running...')
+    console.log(`Server is running in port ${PORT}`)
 });
 export {io}

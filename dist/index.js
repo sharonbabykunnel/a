@@ -49,6 +49,6 @@ app.get('*', (req, res) => {
     res.sendFile(path_1.default.resolve(dirname, './../ToDo_List/', 'dist', 'index.html'));
 });
 server.listen(PORT, () => {
-    console.log('Server is running...');
+    console.log(`Server is running in port ${PORT}`);
 });
 //# sourceMappingURL=index.js.map
